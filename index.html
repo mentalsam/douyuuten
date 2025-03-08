@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>同友店売上報告票Ⓐ【2025年度】</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --accent-color: #3a0ca3;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-radius: 12px;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            max-width: 1600px; /* 画面幅を広げる */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex; /* フレックスボックスを使用して左右に並べる */
+            gap: 20px; /* 左右の間隔 */
+        }
+
+        .container {
+            flex: 1; /* 左右のコンテナを均等に分割 */
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .calculator {
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        input:read-only {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: block;
+        }
+
+        .result h3 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-label {
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: 700;
+        }
+
+        .result-total {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid var(--primary-color);
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .highlighted-input {
+            border: 2px solid var(--warning-color); /* 例: 警告色で強調 */
+            box-shadow: 0 0 8px rgba(247, 37, 133, 0.5); /* 例: 警告色のシャドウ */
+        }
+    </style>
+</head>
+<body>
+    <!-- 左側のコンテナ -->
+    <div class="container">
+        <div class="header">
+            <h1>同友店売上報告票Ⓐ【2025年度】</h1>
+            <p>店名 昆陽 店名No055 同友店0787 ショップ名二コパ（カード外）</p>
+        </div>
+        
+        <div class="calculator">
+            <div class="form-group">
+                <label for="customerCount1">①客数</label>
+                <input type="number" id="customerCount1" value="1" readonly>
+            </div>
+            
+            <div class="form-group-grid">
+                <div class="form-group">
+                    <label for="cashBalance1">②現金記録残額</label>
+                    <input type="number" id="cashBalance1" placeholder="現金残高を入力してください" oninput="updateActualCashBalance1(); updateWithoutTax1()" class="highlighted-input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="creditCardSales1">③統一クレジット</label>
+                    <input type="number" id="creditCardSales1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="debitCardSales1">④電子マネー</label>
+                    <input type="number" id="debitCardSales1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="qrCodeSales1">⑤ポイント利用</label>
+                    <input type="number" id="qrCodeSales1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="electronicMoneySales1">⑥イズミヤ商品券</label>
+                    <input type="number" id="electronicMoneySales1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftCertificateSales1">⑦百貨店商品券</label>
+                    <input type="number" id="giftCertificateSales1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="accountsReceivableSales1">⑧ギフトカード</label>
+                    <input type="number" id="accountsReceivableSales1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+                
+               <div class="form-group">
+                    <label for="doyutenAccountsReceivable1">⑨同友店掛売高</label>
+                    <input type="number" id="doyutenAccountsReceivable1" placeholder="電子マネー合計分を入力してください" class="highlighted-input" oninput="updateWithoutTax1()">
+                </div>
+
+                 <div class="form-group">
+                    <label for="tax1">⑩消費税等</label>
+                    <input type="text" id="tax1" placeholder="計算中..." readonly>
+                </div>
+        
+                 <div class="form-group">
+                    <label for="otherIncome1">⑪その他の入金</label>
+                    <input type="number" id="otherIncome1" value="0" readonly placeholder="その他の入金を入力してください" oninput="updateWithoutTax1()">
+                </div>
+
+                <div class="form-group">
+                    <label for="withoutTax1">⑫純売上</label>
+                    <input type="text" id="withoutTax1" placeholder="計算中..." readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="monthlyCredit1">⑬月支払いクレジット</label>
+                    <input type="number" id="monthlyCredit1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+
+                <div class="form-group">
+                    <label for="bonusCredit1">⑭ボーナスクレジット</label>
+                    <input type="number" id="bonusCredit1" value="0" readonly oninput="updateWithoutTax1()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="actualCashBalance1">⑮現金残高</label>
+                    <input type="text" id="actualCashBalance1" placeholder="計算中..." readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="difference1">⑯過不足</label>
+                    <input type="number" id="difference1" value="0" readonly>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button onclick="calculateTax1()">計算する</button>
+            </div>
+            
+            <div class="result" id="result1">
+                <h3>売上計算結果</h3>
+                <div class="result-row">
+                    <span class="result-label">①客数:</span>
+                    <span id="resultCustomerCount1" class="result-value">1</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">②現金記録残額:</span>
+                    <span id="resultCashBalance1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">③統一クレジット:</span>
+                    <span id="resultCreditCardSales1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">④電子マネー:</span>
+                    <span id="resultDebitCardSales1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑤ポイント利用:</span>
+                    <span id="resultQrCodeSales1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑥イズミヤ商品券:</span>
+                    <span id="resultElectronicMoneySales1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑦百貨店商品券:</span>
+                    <span id="resultGiftCertificateSales1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑧ギフトカード:</span>
+                    <span id="resultAccountsReceivableSales1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑨同友店掛売高:</span>
+                    <span id="resultDoyutenAccountsReceivable1" class="result-value">0円</span>
+                </div>
+                 <div class="result-row">
+                    <span class="result-label">⑩消費税等:</span>
+                    <span id="resultTax1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑪その他の入金:</span>
+                    <span id="resultOtherIncome1" class="result-value">0円</span>
+                </div>
+                 <div class="result-row">
+                    <span class="result-label">⑫純売上:</span>
+                    <span id="resultWithoutTax1" class="result-value">0円</span>
+                </div>
+               <div class="result-row">
+                    <span class="result-label">⑬月支払いクレジット:</span>
+                    <span id="resultMonthlyCredit1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑭ボーナスクレジット:</span>
+                    <span id="resultBonusCredit1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑮現金残高:</span>
+                    <span id="resultActualCashBalance1" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑯過不足:</span>
+                    <span id="resultDifference1" class="result-value">±0円</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右側のコンテナ -->
+    <div class="container">
+        <div class="header">
+            <h1>同友店売上報告票Ⓐ【2025年度】</h1>
+            <p>店名 昆陽 店名No055 同友店0787 ショップ名二コパ（カード外）</p>
+        </div>
+        
+        <div class="calculator">
+            <div class="form-group">
+                <label for="customerCount2">①客数</label>
+                <input type="number" id="customerCount2" value="1" readonly>
+            </div>
+            
+            <div class="form-group-grid">
+                <div class="form-group">
+                    <label for="cashBalance2">②現金記録残額</label>
+                    <input type="number" id="cashBalance2" placeholder="現金残高を入力してください" oninput="updateActualCashBalance2(); updateWithoutTax2()" class="highlighted-input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="creditCardSales2">③統一クレジット</label>
+                    <input type="number" id="creditCardSales2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="debitCardSales2">④電子マネー</label>
+                    <input type="number" id="debitCardSales2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="qrCodeSales2">⑤ポイント利用</label>
+                    <input type="number" id="qrCodeSales2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="electronicMoneySales2">⑥イズミヤ商品券</label>
+                    <input type="number" id="electronicMoneySales2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftCertificateSales2">⑦百貨店商品券</label>
+                    <input type="number" id="giftCertificateSales2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="accountsReceivableSales2">⑧ギフトカード</label>
+                    <input type="number" id="accountsReceivableSales2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+                
+               <div class="form-group">
+                    <label for="doyutenAccountsReceivable2">⑨同友店掛売高</label>
+                    <input type="number" id="doyutenAccountsReceivable2" placeholder="電子マネー合計分を入力してください" class="highlighted-input" oninput="updateWithoutTax2()">
+                </div>
+
+                 <div class="form-group">
+                    <label for="tax2">⑩消費税等</label>
+                    <input type="text" id="tax2" placeholder="計算中..." readonly>
+                </div>
+        
+                 <div class="form-group">
+                    <label for="otherIncome2">⑪その他の入金</label>
+                    <input type="number" id="otherIncome2" value="0" readonly placeholder="その他の入金を入力してください" oninput="updateWithoutTax2()">
+                </div>
+
+                <div class="form-group">
+                    <label for="withoutTax2">⑫純売上</label>
+                    <input type="text" id="withoutTax2" placeholder="計算中..." readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="monthlyCredit2">⑬月支払いクレジット</label>
+                    <input type="number" id="monthlyCredit2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+
+                <div class="form-group">
+                    <label for="bonusCredit2">⑭ボーナスクレジット</label>
+                    <input type="number" id="bonusCredit2" value="0" readonly oninput="updateWithoutTax2()">
+                </div>
+                
+                <div class="form-group">
+                    <label for="actualCashBalance2">⑮現金残高</label>
+                    <input type="text" id="actualCashBalance2" placeholder="計算中..." readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="difference2">⑯過不足</label>
+                    <input type="number" id="difference2" value="0" readonly>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button onclick="calculateTax2()">計算する</button>
+            </div>
+            
+            <div class="result" id="result2">
+                <h3>売上計算結果</h3>
+                <div class="result-row">
+                    <span class="result-label">①客数:</span>
+                    <span id="resultCustomerCount2" class="result-value">1</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">②現金記録残額:</span>
+                    <span id="resultCashBalance2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">③統一クレジット:</span>
+                    <span id="resultCreditCardSales2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">④電子マネー:</span>
+                    <span id="resultDebitCardSales2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑤ポイント利用:</span>
+                    <span id="resultQrCodeSales2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑥イズミヤ商品券:</span>
+                    <span id="resultElectronicMoneySales2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑦百貨店商品券:</span>
+                    <span id="resultGiftCertificateSales2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑧ギフトカード:</span>
+                    <span id="resultAccountsReceivableSales2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑨同友店掛売高:</span>
+                    <span id="resultDoyutenAccountsReceivable2" class="result-value">0円</span>
+                </div>
+                 <div class="result-row">
+                    <span class="result-label">⑩消費税等:</span>
+                    <span id="resultTax2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑪その他の入金:</span>
+                    <span id="resultOtherIncome2" class="result-value">0円</span>
+                </div>
+                 <div class="result-row">
+                    <span class="result-label">⑫純売上:</span>
+                    <span id="resultWithoutTax2" class="result-value">0円</span>
+                </div>
+               <div class="result-row">
+                    <span class="result-label">⑬月支払いクレジット:</span>
+                    <span id="resultMonthlyCredit2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑭ボーナスクレジット:</span>
+                    <span id="resultBonusCredit2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑮現金残高:</span>
+                    <span id="resultActualCashBalance2" class="result-value">0円</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">⑯過不足:</span>
+                    <span id="resultDifference2" class="result-value">±0円</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 左側の計算ロジック
+        function updateCashBalance1() {
+            const cashBalance = parseFloat(document.getElementById('cashBalance1').value) || 0;
+            document.getElementById('actualCashBalance1').value = cashBalance.toLocaleString();
+        }
+
+        function calculateTax1() {
+            // 入力値を取得
+            const customerCount = parseInt(document.getElementById('customerCount1').value) || 1;
+            const cashBalance = parseFloat(document.getElementById('cashBalance1').value) || 0;
+            const creditCardSales = parseFloat(document.getElementById('creditCardSales1').value) || 0;
+            const debitCardSales = parseFloat(document.getElementById('debitCardSales1').value) || 0;
+            const qrCodeSales = parseFloat(document.getElementById('qrCodeSales1').value) || 0;
+            const electronicMoneySales = parseFloat(document.getElementById('electronicMoneySales1').value) || 0;
+            const giftCertificateSales = parseFloat(document.getElementById('giftCertificateSales1').value) || 0;
+            const accountsReceivableSales = parseFloat(document.getElementById('accountsReceivableSales1').value) || 0;
+            const doyutenAccountsReceivable = parseFloat(document.getElementById('doyutenAccountsReceivable1').value) || 0;
+            const otherIncome = parseFloat(document.getElementById('otherIncome1').value) || 0;
+            const monthlyCredit = parseFloat(document.getElementById('monthlyCredit1').value) || 0;
+            const bonusCredit = parseFloat(document.getElementById('bonusCredit1').value) || 0;
+            
+            // 合計金額（税込）
+            const totalAmount = cashBalance + creditCardSales + debitCardSales + qrCodeSales + electronicMoneySales + giftCertificateSales + accountsReceivableSales + doyutenAccountsReceivable + otherIncome + monthlyCredit + bonusCredit;
+            
+            // 消費税計算（10%）
+            const taxAmount = Math.round(totalAmount - (totalAmount / 1.1));
+            
+            // 税抜金額
+            const amountWithoutTax = totalAmount - taxAmount;
+
+            // 純売上を計算
+            const pureSales = cashBalance + doyutenAccountsReceivable - taxAmount;
+
+            // 結果を表示
+            document.getElementById('resultCustomerCount1').textContent = customerCount;
+            document.getElementById('resultCashBalance1').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultCreditCardSales1').textContent = `${creditCardSales.toLocaleString()}円`;
+            document.getElementById('resultDebitCardSales1').textContent = `${debitCardSales.toLocaleString()}円`;
+            document.getElementById('resultQrCodeSales1').textContent = `${qrCodeSales.toLocaleString()}円`;
+            document.getElementById('resultElectronicMoneySales1').textContent = `${electronicMoneySales.toLocaleString()}円`;
+            document.getElementById('resultGiftCertificateSales1').textContent = `${giftCertificateSales.toLocaleString()}円`;
+            document.getElementById('resultAccountsReceivableSales1').textContent = `${accountsReceivableSales.toLocaleString()}円`;
+            document.getElementById('resultDoyutenAccountsReceivable1').textContent = `${doyutenAccountsReceivable.toLocaleString()}円`;
+            document.getElementById('tax1').value = taxAmount.toLocaleString();
+            document.getElementById('resultTax1').textContent = `${taxAmount.toLocaleString()}円`;
+            document.getElementById('resultOtherIncome1').textContent = `${otherIncome.toLocaleString()}円`;
+            document.getElementById('withoutTax1').value = pureSales.toLocaleString();
+            document.getElementById('resultWithoutTax1').textContent = `${pureSales.toLocaleString()}円`;
+            document.getElementById('resultMonthlyCredit1').textContent = `${monthlyCredit.toLocaleString()}円`;
+            document.getElementById('resultBonusCredit1').textContent = `${bonusCredit.toLocaleString()}円`;
+            
+            // 現金残高を設定
+            document.getElementById('actualCashBalance1').value = cashBalance.toLocaleString();
+            document.getElementById('resultActualCashBalance1').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultDifference1').textContent = `±0円`;
+            
+            // 結果表示エリアをスムーズに表示
+            const resultElement = document.getElementById('result1');
+            resultElement.style.display = 'block';
+        }
+
+        function updateWithoutTax1() {
+             // 入力値を取得
+            const customerCount = parseInt(document.getElementById('customerCount1').value) || 1;
+            const cashBalance = parseFloat(document.getElementById('cashBalance1').value) || 0;
+            const creditCardSales = parseFloat(document.getElementById('creditCardSales1').value) || 0;
+            const debitCardSales = parseFloat(document.getElementById('debitCardSales1').value) || 0;
+            const qrCodeSales = parseFloat(document.getElementById('qrCodeSales1').value) || 0;
+            const electronicMoneySales = parseFloat(document.getElementById('electronicMoneySales1').value) || 0;
+            const giftCertificateSales = parseFloat(document.getElementById('giftCertificateSales1').value) || 0;
+            const accountsReceivableSales = parseFloat(document.getElementById('accountsReceivableSales1').value) || 0;
+            const doyutenAccountsReceivable = parseFloat(document.getElementById('doyutenAccountsReceivable1').value) || 0;
+            const otherIncome = parseFloat(document.getElementById('otherIncome1').value) || 0;
+            const monthlyCredit = parseFloat(document.getElementById('monthlyCredit1').value) || 0;
+            const bonusCredit = parseFloat(document.getElementById('bonusCredit1').value) || 0;
+            
+            // 合計金額（税込）
+            const totalAmount = cashBalance + creditCardSales + debitCardSales + qrCodeSales + electronicMoneySales + giftCertificateSales + accountsReceivableSales + doyutenAccountsReceivable + otherIncome + monthlyCredit + bonusCredit;
+            
+            // 税抜金額
+            let amountWithoutTax = totalAmount / 1.1;
+            amountWithoutTax = Math.round(amountWithoutTax);
+
+            let taxAmount = totalAmount - amountWithoutTax;
+            taxAmount = Math.round(taxAmount);
+
+            // 純売上を計算
+            let pureSales = cashBalance + doyutenAccountsReceivable - taxAmount;
+            pureSales = Math.round(pureSales);
+
+            document.getElementById('withoutTax1').value = pureSales.toLocaleString();
+            document.getElementById('tax1').value = taxAmount.toLocaleString();
+            
+            // 現金残高を更新（toLocaleStringを使用して桁区切りを表示）
+            document.getElementById('actualCashBalance1').value = cashBalance.toLocaleString();
+
+            // 結果表示も更新
+            document.getElementById('resultCustomerCount1').textContent = customerCount;
+            document.getElementById('resultCashBalance1').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultCreditCardSales1').textContent = `${creditCardSales.toLocaleString()}円`;
+            document.getElementById('resultDebitCardSales1').textContent = `${debitCardSales.toLocaleString()}円`;
+            document.getElementById('resultQrCodeSales1').textContent = `${qrCodeSales.toLocaleString()}円`;
+            document.getElementById('resultElectronicMoneySales1').textContent = `${electronicMoneySales.toLocaleString()}円`;
+            document.getElementById('resultGiftCertificateSales1').textContent = `${giftCertificateSales.toLocaleString()}円`;
+            document.getElementById('resultAccountsReceivableSales1').textContent = `${accountsReceivableSales.toLocaleString()}円`;
+            document.getElementById('resultDoyutenAccountsReceivable1').textContent = `${doyutenAccountsReceivable.toLocaleString()}円`;
+            document.getElementById('resultTax1').textContent = `${taxAmount.toLocaleString()}円`;
+            document.getElementById('resultOtherIncome1').textContent = `${otherIncome.toLocaleString()}円`;
+            document.getElementById('resultWithoutTax1').textContent = `${pureSales.toLocaleString()}円`;
+            document.getElementById('resultMonthlyCredit1').textContent = `${monthlyCredit.toLocaleString()}円`;
+            document.getElementById('resultBonusCredit1').textContent = `${bonusCredit.toLocaleString()}円`;
+            document.getElementById('resultActualCashBalance1').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultDifference1').textContent = `±0円`;
+        }
+
+        function updateActualCashBalance1() {
+            const cashBalance = parseFloat(document.getElementById('cashBalance1').value) || 0;
+            // 桁区切りを表示するためにtoLocaleStringを使用
+            document.getElementById('actualCashBalance1').value = cashBalance.toLocaleString();
+            document.getElementById('resultActualCashBalance1').textContent = `${cashBalance.toLocaleString()}円`;
+        }
+
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        // 入力フィールドの値が変更されるたびに計算を実行
+        // 例: 300msの遅延で実行
+        document.getElementById('cashBalance1').addEventListener('input', debounce(function() {
+            updateActualCashBalance1();
+            updateWithoutTax1();
+        }, 300));
+        document.getElementById('doyutenAccountsReceivable1').addEventListener('input', debounce(updateWithoutTax1, 300));
+        document.getElementById('otherIncome1').addEventListener('input', debounce(updateWithoutTax1, 300));
+        
+        // ページ読み込み時に初期値を設定
+        window.onload = function() {
+            updateActualCashBalance1();
+            updateWithoutTax1();
+        };
+
+        // 右側の計算ロジック
+        function updateCashBalance2() {
+            const cashBalance = parseFloat(document.getElementById('cashBalance2').value) || 0;
+            document.getElementById('actualCashBalance2').value = cashBalance.toLocaleString();
+        }
+
+        function calculateTax2() {
+            // 入力値を取得
+            const customerCount = parseInt(document.getElementById('customerCount2').value) || 1;
+            const cashBalance = parseFloat(document.getElementById('cashBalance2').value) || 0;
+            const creditCardSales = parseFloat(document.getElementById('creditCardSales2').value) || 0;
+            const debitCardSales = parseFloat(document.getElementById('debitCardSales2').value) || 0;
+            const qrCodeSales = parseFloat(document.getElementById('qrCodeSales2').value) || 0;
+            const electronicMoneySales = parseFloat(document.getElementById('electronicMoneySales2').value) || 0;
+            const giftCertificateSales = parseFloat(document.getElementById('giftCertificateSales2').value) || 0;
+            const accountsReceivableSales = parseFloat(document.getElementById('accountsReceivableSales2').value) || 0;
+            const doyutenAccountsReceivable = parseFloat(document.getElementById('doyutenAccountsReceivable2').value) || 0;
+            const otherIncome = parseFloat(document.getElementById('otherIncome2').value) || 0;
+            const monthlyCredit = parseFloat(document.getElementById('monthlyCredit2').value) || 0;
+            const bonusCredit = parseFloat(document.getElementById('bonusCredit2').value) || 0;
+            
+            // 合計金額（税込）
+            const totalAmount = cashBalance + creditCardSales + debitCardSales + qrCodeSales + electronicMoneySales + giftCertificateSales + accountsReceivableSales + doyutenAccountsReceivable + otherIncome + monthlyCredit + bonusCredit;
+            
+            // 消費税計算（10%）
+            const taxAmount = Math.round(totalAmount - (totalAmount / 1.1));
+            
+            // 税抜金額
+            const amountWithoutTax = totalAmount - taxAmount;
+
+            // 純売上を計算
+            const pureSales = cashBalance + doyutenAccountsReceivable - taxAmount;
+
+            // 結果を表示
+            document.getElementById('resultCustomerCount2').textContent = customerCount;
+            document.getElementById('resultCashBalance2').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultCreditCardSales2').textContent = `${creditCardSales.toLocaleString()}円`;
+            document.getElementById('resultDebitCardSales2').textContent = `${debitCardSales.toLocaleString()}円`;
+            document.getElementById('resultQrCodeSales2').textContent = `${qrCodeSales.toLocaleString()}円`;
+            document.getElementById('resultElectronicMoneySales2').textContent = `${electronicMoneySales.toLocaleString()}円`;
+            document.getElementById('resultGiftCertificateSales2').textContent = `${giftCertificateSales.toLocaleString()}円`;
+            document.getElementById('resultAccountsReceivableSales2').textContent = `${accountsReceivableSales.toLocaleString()}円`;
+            document.getElementById('resultDoyutenAccountsReceivable2').textContent = `${doyutenAccountsReceivable.toLocaleString()}円`;
+            document.getElementById('tax2').value = taxAmount.toLocaleString();
+            document.getElementById('resultTax2').textContent = `${taxAmount.toLocaleString()}円`;
+            document.getElementById('resultOtherIncome2').textContent = `${otherIncome.toLocaleString()}円`;
+            document.getElementById('withoutTax2').value = pureSales.toLocaleString();
+            document.getElementById('resultWithoutTax2').textContent = `${pureSales.toLocaleString()}円`;
+            document.getElementById('resultMonthlyCredit2').textContent = `${monthlyCredit.toLocaleString()}円`;
+            document.getElementById('resultBonusCredit2').textContent = `${bonusCredit.toLocaleString()}円`;
+            
+            // 現金残高を設定
+            document.getElementById('actualCashBalance2').value = cashBalance.toLocaleString();
+            document.getElementById('resultActualCashBalance2').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultDifference2').textContent = `±0円`;
+            
+            // 結果表示エリアをスムーズに表示
+            const resultElement = document.getElementById('result2');
+            resultElement.style.display = 'block';
+        }
+
+        function updateWithoutTax2() {
+             // 入力値を取得
+            const customerCount = parseInt(document.getElementById('customerCount2').value) || 1;
+            const cashBalance = parseFloat(document.getElementById('cashBalance2').value) || 0;
+            const creditCardSales = parseFloat(document.getElementById('creditCardSales2').value) || 0;
+            const debitCardSales = parseFloat(document.getElementById('debitCardSales2').value) || 0;
+            const qrCodeSales = parseFloat(document.getElementById('qrCodeSales2').value) || 0;
+            const electronicMoneySales = parseFloat(document.getElementById('electronicMoneySales2').value) || 0;
+            const giftCertificateSales = parseFloat(document.getElementById('giftCertificateSales2').value) || 0;
+            const accountsReceivableSales = parseFloat(document.getElementById('accountsReceivableSales2').value) || 0;
+            const doyutenAccountsReceivable = parseFloat(document.getElementById('doyutenAccountsReceivable2').value) || 0;
+            const otherIncome = parseFloat(document.getElementById('otherIncome2').value) || 0;
+            const monthlyCredit = parseFloat(document.getElementById('monthlyCredit2').value) || 0;
+            const bonusCredit = parseFloat(document.getElementById('bonusCredit2').value) || 0;
+            
+            // 合計金額（税込）
+            const totalAmount = cashBalance + creditCardSales + debitCardSales + qrCodeSales + electronicMoneySales + giftCertificateSales + accountsReceivableSales + doyutenAccountsReceivable + otherIncome + monthlyCredit + bonusCredit;
+            
+            // 税抜金額
+            let amountWithoutTax = totalAmount / 1.1;
+            amountWithoutTax = Math.round(amountWithoutTax);
+
+            let taxAmount = totalAmount - amountWithoutTax;
+            taxAmount = Math.round(taxAmount);
+
+            // 純売上を計算
+            let pureSales = cashBalance + doyutenAccountsReceivable - taxAmount;
+            pureSales = Math.round(pureSales);
+
+            document.getElementById('withoutTax2').value = pureSales.toLocaleString();
+            document.getElementById('tax2').value = taxAmount.toLocaleString();
+            
+            // 現金残高を更新（toLocaleStringを使用して桁区切りを表示）
+            document.getElementById('actualCashBalance2').value = cashBalance.toLocaleString();
+
+            // 結果表示も更新
+            document.getElementById('resultCustomerCount2').textContent = customerCount;
+            document.getElementById('resultCashBalance2').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultCreditCardSales2').textContent = `${creditCardSales.toLocaleString()}円`;
+            document.getElementById('resultDebitCardSales2').textContent = `${debitCardSales.toLocaleString()}円`;
+            document.getElementById('resultQrCodeSales2').textContent = `${qrCodeSales.toLocaleString()}円`;
+            document.getElementById('resultElectronicMoneySales2').textContent = `${electronicMoneySales.toLocaleString()}円`;
+            document.getElementById('resultGiftCertificateSales2').textContent = `${giftCertificateSales.toLocaleString()}円`;
+            document.getElementById('resultAccountsReceivableSales2').textContent = `${accountsReceivableSales.toLocaleString()}円`;
+            document.getElementById('resultDoyutenAccountsReceivable2').textContent = `${doyutenAccountsReceivable.toLocaleString()}円`;
+            document.getElementById('resultTax2').textContent = `${taxAmount.toLocaleString()}円`;
+            document.getElementById('resultOtherIncome2').textContent = `${otherIncome.toLocaleString()}円`;
+            document.getElementById('resultWithoutTax2').textContent = `${pureSales.toLocaleString()}円`;
+            document.getElementById('resultMonthlyCredit2').textContent = `${monthlyCredit.toLocaleString()}円`;
+            document.getElementById('resultBonusCredit2').textContent = `${bonusCredit.toLocaleString()}円`;
+            document.getElementById('resultActualCashBalance2').textContent = `${cashBalance.toLocaleString()}円`;
+            document.getElementById('resultDifference2').textContent = `±0円`;
+        }
+
+        function updateActualCashBalance2() {
+            const cashBalance = parseFloat(document.getElementById('cashBalance2').value) || 0;
+            // 桁区切りを表示するためにtoLocaleStringを使用
+            document.getElementById('actualCashBalance2').value = cashBalance.toLocaleString();
+            document.getElementById('resultActualCashBalance2').textContent = `${cashBalance.toLocaleString()}円`;
+        }
+
+        // 入力フィールドの値が変更されるたびに計算を実行
+        // 例: 300msの遅延で実行
+        document.getElementById('cashBalance2').addEventListener('input', debounce(function() {
+            updateActualCashBalance2();
+            updateWithoutTax2();
+        }, 300));
+        document.getElementById('doyutenAccountsReceivable2').addEventListener('input', debounce(updateWithoutTax2, 300));
+        document.getElementById('otherIncome2').addEventListener('input', debounce(updateWithoutTax2, 300));
+        
+        // ページ読み込み時に初期値を設定
+        window.onload = function() {
+            updateActualCashBalance1();
+            updateWithoutTax1();
+            updateActualCashBalance2();
+            updateWithoutTax2();
+        };
+    </script>
+</body>
+</html>
