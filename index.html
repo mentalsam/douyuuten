@@ -391,7 +391,7 @@
                 
                <div class="form-group">
                     <label for="doyutenAccountsReceivable2">⑨同友店掛売高</label>
-                    <input type="number" id="doyutenAccountsReceivable2" placeholder="電子マネー合計分を入力してください" class="highlighted-input" oninput="updateWithoutTax2()">
+                    <input type="number" id="doyutenAccountsReceivable2" value="0" readonly oninput="updateWithoutTax2()">
                 </div>
 
                  <div class="form-group">
@@ -530,7 +530,7 @@
             const totalAmount = cashBalance + creditCardSales + debitCardSales + qrCodeSales + electronicMoneySales + giftCertificateSales + accountsReceivableSales + doyutenAccountsReceivable + otherIncome + monthlyCredit + bonusCredit;
             
             // 消費税計算（10%）
-            const taxAmount = Math.round(totalAmount - (totalAmount / 1.1));
+            const taxAmount = Math.ceil(totalAmount - (totalAmount / 1.1));
             
             // 税抜金額
             const amountWithoutTax = totalAmount - taxAmount;
@@ -586,14 +586,14 @@
             
             // 税抜金額
             let amountWithoutTax = totalAmount / 1.1;
-            amountWithoutTax = Math.round(amountWithoutTax);
+            amountWithoutTax = Math.ceil(amountWithoutTax);
 
             let taxAmount = totalAmount - amountWithoutTax;
-            taxAmount = Math.round(taxAmount);
+            taxAmount = Math.ceil(taxAmount);
 
             // 純売上を計算
             let pureSales = cashBalance + doyutenAccountsReceivable - taxAmount;
-            pureSales = Math.round(pureSales);
+            pureSales = Math.ceil(pureSales);
 
             document.getElementById('withoutTax1').value = pureSales.toLocaleString();
             document.getElementById('tax1').value = taxAmount.toLocaleString();
@@ -675,7 +675,7 @@
             const totalAmount = cashBalance + creditCardSales + debitCardSales + qrCodeSales + electronicMoneySales + giftCertificateSales + accountsReceivableSales + doyutenAccountsReceivable + otherIncome + monthlyCredit + bonusCredit;
             
             // 消費税計算（10%）
-            const taxAmount = Math.round(totalAmount - (totalAmount / 1.1));
+            const taxAmount = Math.ceil(totalAmount - (totalAmount / 1.1));
             
             // 税抜金額
             const amountWithoutTax = totalAmount - taxAmount;
@@ -731,14 +731,14 @@
             
             // 税抜金額
             let amountWithoutTax = totalAmount / 1.1;
-            amountWithoutTax = Math.round(amountWithoutTax);
+            amountWithoutTax = Math.ceil(amountWithoutTax);
 
             let taxAmount = totalAmount - amountWithoutTax;
-            taxAmount = Math.round(taxAmount);
+            taxAmount = Math.ceil(taxAmount);
 
             // 純売上を計算
             let pureSales = cashBalance + doyutenAccountsReceivable - taxAmount;
-            pureSales = Math.round(pureSales);
+            pureSales = Math.ceil(pureSales);
 
             document.getElementById('withoutTax2').value = pureSales.toLocaleString();
             document.getElementById('tax2').value = taxAmount.toLocaleString();
